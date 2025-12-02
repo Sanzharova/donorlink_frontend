@@ -26,8 +26,12 @@ export const useAuthStore = defineStore('auth', {
         this.user = res.data.user;
 
         localStorage.setItem('accessToken', this.accessToken);
+
+        return true;
       } catch (e: any) {
         this.error = e.response?.data?.error || 'Login error';
+
+        return false;
       } finally {
         this.loading = false;
       }
@@ -42,8 +46,11 @@ export const useAuthStore = defineStore('auth', {
         this.user = res.data.user;
 
         localStorage.setItem('accessToken', this.accessToken);
+
+        return true;
       } catch (e: any) {
         this.error = e.response?.data?.error || 'Register error';
+        return false;
       } finally {
         this.loading = false;
       }
@@ -61,13 +68,12 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async logout() {
-      try {
-        await authApi.logout();
-      } catch (_) {}
-
-      this.user = null;
-      this.accessToken = '';
-      localStorage.removeItem('accessToken');
+      await authApi.logout()
+        .then(() => {
+          this.user = null;
+          this.accessToken = '';
+          localStorage.removeItem('accessToken');
+        });
     },
   },
 });

@@ -1,11 +1,17 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+
+import Toast from 'primevue/toast';
+import { useToast } from 'primevue/usetoast';
+import { registerToast } from './utils/toast';
+
+const toast = useToast();
+registerToast(toast);
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <Toast/>
+  <router-view/>
 </template>
 
-<style scoped></style>
+<style>
+</style>
