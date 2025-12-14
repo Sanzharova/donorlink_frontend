@@ -28,41 +28,65 @@ const submit = async () => {
 </script>
 
 <template>
-  <div class="card p-4 shadow-2">
-    <h2>Create Blood Center</h2>
+  <div
+    class="surface-card p-6 shadow-2 border-round w-full"
+    style="max-width: 720px"
+  >
+    <div class="mb-5">
+      <h2 class="text-2xl font-bold mb-1">Create Blood Center</h2>
+      <small class="text-color-secondary">
+        Add a new blood donation center
+      </small>
+    </div>
 
-    <div class="grid mt-3">
+    <div class="grid">
       <div class="col-12 md:col-6">
-        <label>Name</label>
+        <label class="font-medium mb-1 block">Name</label>
         <InputText v-model="form.name" class="w-full" />
       </div>
 
       <div class="col-12 md:col-6">
-        <label>Phone</label>
+        <label class="font-medium mb-1 block">Phone</label>
         <InputText v-model="form.phone" class="w-full" />
       </div>
 
       <div class="col-12">
-        <label>Address</label>
+        <label class="font-medium mb-1 block">Address</label>
         <InputText v-model="form.address" class="w-full" />
       </div>
 
       <div class="col-12 md:col-6">
-        <label>Latitude</label>
-        <InputText v-model.number="form.coordinates.latitude" class="w-full" />
+        <label class="font-medium mb-1 block">Latitude</label>
+        <InputText
+          v-model.number="form.coordinates.latitude"
+          class="w-full"
+        />
       </div>
 
       <div class="col-12 md:col-6">
-        <label>Longitude</label>
-        <InputText v-model.number="form.coordinates.longitude" class="w-full" />
+        <label class="font-medium mb-1 block">Longitude</label>
+        <InputText
+          v-model.number="form.coordinates.longitude"
+          class="w-full"
+        />
       </div>
     </div>
 
-    <Button
-      label="Create"
-      class="mt-3"
-      :loading="loading"
-      @click="submit"
-    />
+    <div class="flex justify-content-end gap-2 mt-6">
+      <Button
+        label="Cancel"
+        severity="secondary"
+        text
+        :disabled="loading"
+        @click="router.push('/blood-centers')"
+      />
+
+      <Button
+        label="Create center"
+        icon="pi pi-check"
+        :loading="loading"
+        @click="submit"
+      />
+    </div>
   </div>
 </template>

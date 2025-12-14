@@ -15,7 +15,6 @@ const centersStore = useBloodCentersStore()
 const route = useRoute()
 const router = useRouter()
 
-const loading = ref(false)
 const centerOptions = ref([])
 
 const form = ref({
@@ -25,34 +24,43 @@ const form = ref({
   centerId: '',
 })
 
+const pageLoading = ref(true)
+const saving = ref(false)
+
 onMounted(async () => {
-  const id = route.params.id as string
+  try {
+    pageLoading.value = true
 
-  // load donation
-  const data = await donationStore.getDonation(id)
+    const id = route.params.id as string
 
-  form.value = {
-    status: data.status,
-    scheduledFor: data.scheduledFor,
-    notes: data.notes ?? '',
-    centerId: typeof data.centerId === 'string' ? data.centerId : data.centerId._id,
+    const data = await donationStore.getDonation(id)
+
+    form.value = {
+      status: data.status,
+      scheduledFor: data.scheduledFor,
+      notes: data.notes ?? '',
+      centerId: typeof data.centerId === 'string'
+        ? data.centerId
+        : data.centerId._id,
+    }
+
+    await centersStore.fetchCenters(1, 100)
+    centerOptions.value = centersStore.centers.map(c => ({
+      label: c.name,
+      value: c._id,
+    }))
+  } finally {
+    pageLoading.value = false
   }
-
-  // load centers
-  await centersStore.fetchCenters(1, 100)
-  centerOptions.value = centersStore.centers.map(c => ({
-    label: c.name,
-    value: c._id,
-  }))
 })
 
 const statuses = ['requested', 'confirmed', 'completed', 'canceled']
 
 const save = async () => {
-  loading.value = true
+  saving.value = true
   await donationStore.updateDonation(route.params.id as string, form.value)
-  loading.value = false
-  router.push('/donations')
+  saving.value = false
+  await router.push('/donations')
 }
 </script>
 
@@ -66,6 +74,8 @@ const save = async () => {
         <Dropdown
           v-model="form.status"
           :options="statuses"
+          :loading="pageLoading"
+          :disabled="pageLoading"
           class="w-full"
         />
       </div>
@@ -74,6 +84,8 @@ const save = async () => {
         <label>Scheduled For</label>
         <InputText
           v-model="form.scheduledFor"
+          :loading="pageLoading"
+          :disabled="pageLoading"
           type="datetime-local"
           class="w-full"
         />
@@ -83,6 +95,8 @@ const save = async () => {
         <label>Notes</label>
         <InputText
           v-model="form.notes"
+          :loading="pageLoading"
+          :disabled="pageLoading"
           class="w-full"
         />
       </div>
@@ -92,6 +106,8 @@ const save = async () => {
         <Dropdown
           v-model="form.centerId"
           :options="centerOptions"
+          :loading="pageLoading"
+          :disabled="pageLoading"
           class="w-full"
           optionLabel="label"
           optionValue="value"
@@ -102,7 +118,8 @@ const save = async () => {
     <Button
       label="Save"
       class="mt-3"
-      :loading="loading"
+      :loading="saving"
+      :disabled="pageLoading"
       @click="save"
     />
   </div>

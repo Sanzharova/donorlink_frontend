@@ -35,5 +35,9 @@ export const useUsersStore = defineStore('users', {
     async toggleBan(id: string) {
       return usersApi.toggleBan(id);
     },
+
+    async toggleAdmin(id: string) {
+      return usersApi.toggleAdmin(id);
+    },
   },
 });

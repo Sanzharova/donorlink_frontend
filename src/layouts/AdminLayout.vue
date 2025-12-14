@@ -6,65 +6,55 @@ import { useRouter } from 'vue-router'
 import Button from 'primevue/button'
 import Divider from 'primevue/divider'
 
-const authStore = useAuthStore();
-const router = useRouter();
+const authStore = useAuthStore()
+const router = useRouter()
 
-const sidebarOpen = ref(true);
+const sidebarOpen = ref(true)
 
 const logout = async () => {
-  await authStore.logout();
-  await router.push('/login');
+  await authStore.logout()
+  await router.push('/login')
 }
 </script>
 
 <template>
-  <div class="flex min-h-screen">
+  <div class="flex min-h-screen bg-surface-100">
 
     <aside
       v-if="sidebarOpen"
-      class="surface-50 border-right-1 surface-border p-4 flex flex-column"
-      style="width: 250px"
+      class="sidebar surface-card shadow-2 flex flex-column"
     >
-      <h2 class="font-bold text-xl mb-5">DonorLink</h2>
+      <router-link to="/" class="logo">
+        <img src="/public/logo.png" alt="DonorLink" />
+        <span>DonorLink</span>
+      </router-link>
 
       <ul class="list-none p-0 m-0 flex-1">
-        <li class="mb-2">
-          <router-link
-            to="/"
-            class="sidebar-item"
-          >
-            <i class="pi pi-home mr-2"></i>
-            Dashboard
+        <li>
+          <router-link to="/" class="sidebar-item">
+            <i class="pi pi-home"></i>
+            <span>Dashboard</span>
           </router-link>
         </li>
 
-        <li class="mb-2">
-          <router-link
-            to="/users"
-            class="sidebar-item"
-          >
-            <i class="pi pi-users mr-2"></i>
-            Users
+        <li>
+          <router-link to="/users" class="sidebar-item">
+            <i class="pi pi-users"></i>
+            <span>Users</span>
           </router-link>
         </li>
 
-        <li class="mb-2">
-          <router-link
-            to="/blood-centers"
-            class="sidebar-item"
-          >
-            <i class="pi pi-building mr-2"></i>
-            Blood Centers
+        <li>
+          <router-link to="/blood-centers" class="sidebar-item">
+            <i class="pi pi-building"></i>
+            <span>Blood Centers</span>
           </router-link>
         </li>
 
-        <li class="mb-2">
-          <router-link
-            to="/donations"
-            class="sidebar-item"
-          >
-            <i class="pi pi-heart mr-2"></i>
-            Donations
+        <li>
+          <router-link to="/donations" class="sidebar-item">
+            <i class="pi pi-heart"></i>
+            <span>Donations</span>
           </router-link>
         </li>
       </ul>
@@ -74,27 +64,52 @@ const logout = async () => {
       <Button
         label="Logout"
         icon="pi pi-sign-out"
-        class="p-button-danger w-full"
+        severity="danger"
+        class="w-full"
         @click="logout"
       />
     </aside>
 
-    <div class="flex-1 p-4">
+    <main class="flex-1 p-4">
       <router-view />
-    </div>
+    </main>
 
   </div>
 </template>
 
 <style scoped>
+.sidebar {
+  width: 260px;
+  padding: 1.25rem;
+  border-radius: 0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.logo img {
+  width: 28px;
+  height: 28px;
+}
+
 .sidebar-item {
   display: flex;
   align-items: center;
-  padding: 0.7rem 0.8rem;
-  border-radius: 6px;
+  gap: 0.7rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: 8px;
   color: var(--text-color);
   text-decoration: none;
-  transition: background 0.15s;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  margin-bottom: 0.25rem;
 }
 
 .sidebar-item:hover {

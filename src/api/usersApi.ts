@@ -22,4 +22,8 @@ export const usersApi = {
   toggleBan(id: string) {
     return http.patch(`${prefix}/toggle-ban/${id}`);
   },
+
+  toggleAdmin(id: string) {
+    return http.patch(`${prefix}/toggle-admin/${id}`);
+  },
 };

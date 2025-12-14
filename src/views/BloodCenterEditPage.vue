@@ -18,47 +18,99 @@ const form = ref<BloodCenterUpdate>({
   phone: '',
 })
 
+const pageLoading = ref(true)
+const saving = ref(false)
+
 onMounted(async () => {
-  const center = await store.getCenterById(route.params.id as string)
-  form.value = {
-    name: center.name,
-    address: center.address,
-    phone: center.phone,
+  try {
+    pageLoading.value = true
+
+    const center = await store.getCenterById(route.params.id as string)
+
+    form.value = {
+      name: center.name,
+      address: center.address,
+      phone: center.phone,
+    }
+  } finally {
+    pageLoading.value = false
   }
 })
 
 const save = async () => {
-  loading.value = true
+  saving.value = true
   await store.updateCenter(route.params.id as string, form.value)
-  loading.value = false
-  router.push('/blood-centers')
+  saving.value = false
+  await router.push('/blood-centers')
 }
+
 </script>
 
 <template>
-  <div class="card p-4 shadow-2">
-    <h2>Edit Blood Center</h2>
+  <div
+    v-if="pageLoading"
+    class="flex justify-content-center align-items-center min-h-[400px]"
+  >
+    <i class="pi pi-spin pi-spinner text-4xl text-primary opacity-80"></i>
+  </div>
 
-    <div class="mt-3">
-      <label>Name</label>
-      <InputText v-model="form.name" class="w-full" />
+  <div
+    v-else
+    class="surface-card p-6 shadow-2 border-round w-full"
+    style="max-width: 720px"
+  >
+    <div class="mb-5">
+      <h2 class="text-2xl font-bold mb-1">Edit Blood Center</h2>
+      <small class="text-color-secondary">
+        Update blood center information
+      </small>
     </div>
 
-    <div class="mt-3">
-      <label>Address</label>
-      <InputText v-model="form.address" class="w-full" />
+    <div class="grid">
+      <div class="col-12">
+        <label class="font-medium mb-1 block">Name</label>
+        <InputText
+          v-model="form.name"
+          class="w-full"
+          :disabled="saving"
+        />
+      </div>
+
+      <div class="col-12">
+        <label class="font-medium mb-1 block">Address</label>
+        <InputText
+          v-model="form.address"
+          class="w-full"
+          :disabled="saving"
+        />
+      </div>
+
+      <div class="col-12 md:col-6">
+        <label class="font-medium mb-1 block">Phone</label>
+        <InputText
+          v-model="form.phone"
+          class="w-full"
+          :disabled="saving"
+        />
+      </div>
     </div>
 
-    <div class="mt-3">
-      <label>Phone</label>
-      <InputText v-model="form.phone" class="w-full" />
-    </div>
+    <div class="flex justify-content-end gap-2 mt-6">
+      <Button
+        label="Cancel"
+        severity="secondary"
+        text
+        :disabled="saving"
+        @click="router.push('/blood-centers')"
+      />
 
-    <Button
-      label="Save"
-      class="mt-3"
-      :loading="loading"
-      @click="save"
-    />
+      <Button
+        label="Save changes"
+        icon="pi pi-check"
+        :loading="saving"
+        @click="save"
+      />
+    </div>
   </div>
 </template>
+

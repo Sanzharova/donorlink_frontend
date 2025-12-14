@@ -21,58 +21,81 @@ onMounted(() => load())
 const edit = (id: string) => {
   router.push(`/donations/${id}`)
 }
+
+const statusSeverity = (status: string) => {
+  switch (status) {
+    case 'completed': return 'success'
+    case 'cancelled': return 'danger'
+    case 'scheduled': return 'info'
+    default: return 'warning'
+  }
+}
 </script>
 
 <template>
-  <div>
-    <h1 class="text-3xl font-bold mb-3">Donations</h1>
+  <div class="surface-card p-4 shadow-2 border-round">
+
+    <div class="flex justify-content-between align-items-center mb-4">
+      <div>
+        <h1 class="text-2xl font-bold mb-1">Donations</h1>
+        <small class="text-color-secondary">
+          Total: {{ store.pagination?.total || 0 }}
+        </small>
+      </div>
+    </div>
 
     <DataTable
       :value="store.donations"
       :loading="store.loading"
-      showGridlines
+      dataKey="_id"
+      responsiveLayout="scroll"
+      stripedRows
+      size="small"
+      rowHover
+      class="donations-table"
     >
-      <Column
-        header="Donor"
-        field="userId.fullName"
-      />
+      <Column header="Donor">
+        <template #body="{ data }">
+          <div class="font-medium">{{ data.userId.fullName }}</div>
+          <small class="text-color-secondary">
+            {{ data.userId.bloodType }}
+          </small>
+        </template>
+      </Column>
 
-      <Column
-        header="Blood Type"
-        field="userId.bloodType"
-      />
-
-      <Column
-        header="Center"
-        field="centerId.name"
-      />
+      <Column header="Center">
+        <template #body="{ data }">
+          <div class="font-medium">{{ data.centerId.name }}</div>
+        </template>
+      </Column>
 
       <Column header="Status">
         <template #body="{ data }">
           <Tag
             :value="data.status"
-            :severity="
-              data.status === 'completed'
-                ? 'success'
-                : data.status === 'cancelled'
-                ? 'danger'
-                : 'info'
-            "
+            :severity="statusSeverity(data.status)"
+            class="text-sm"
           />
         </template>
       </Column>
 
-      <Column header="Scheduled For">
+      <Column header="Scheduled">
         <template #body="{ data }">
-          {{ new Date(data.scheduledFor).toLocaleString() }}
+          <span class="text-sm">
+            {{ new Date(data.scheduledFor).toLocaleString() }}
+          </span>
         </template>
       </Column>
 
-      <Column header="Actions">
+      <Column header="Actions" style="width: 90px">
         <template #body="{ data }">
           <Button
             icon="pi pi-pencil"
             severity="secondary"
+            text
+            rounded
+            class="action-btn"
+            v-tooltip.bottom="'Edit donation'"
             @click="edit(data._id)"
           />
         </template>
@@ -88,3 +111,28 @@ const edit = (id: string) => {
     />
   </div>
 </template>
+
+<style scoped>
+.donations-table .p-datatable-tbody > tr {
+  transition: background-color 0.15s ease;
+}
+
+.donations-table .p-datatable-tbody > tr:hover {
+  background-color: var(--surface-hover);
+}
+
+.donations-table .action-btn {
+  opacity: 0.6;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.donations-table tr:hover .action-btn {
+  opacity: 1;
+  transform: translateX(1px);
+}
+
+.p-tag {
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+</style>

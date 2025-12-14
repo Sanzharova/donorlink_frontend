@@ -13,7 +13,7 @@ import './style.css'
 
 import { createPinia } from 'pinia'
 import router from './router'
-import {ToastService} from "primevue";
+import {ToastService, Tooltip} from "primevue";
 
 const app = createApp(App)
 
@@ -27,6 +27,9 @@ app.use(PrimeVue, {
     }
   }
 });
+
+app.directive('tooltip', Tooltip);
+
 app.use(ToastService)
 app.use(createPinia())
 app.use(router)
