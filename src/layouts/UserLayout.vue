@@ -1,10 +1,9 @@
-<script setup>
-import { ref } from 'vue'
-import { useAuthStore } from '../store/useAuthStore'
-import { useRouter } from 'vue-router'
-
-import Button from 'primevue/button'
-import Divider from 'primevue/divider'
+<script setup lang="ts">
+import {useAuthStore} from "@/store/useAuthStore.ts";
+import {useRouter} from "vue-router";
+import {ref} from "vue";
+import Button from "primevue/button";
+import Divider from "primevue/divider";
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -26,35 +25,36 @@ const logout = async () => {
     >
       <router-link to="/" class="logo">
         <img src="/public/logo.png" alt="DonorLink" />
-        <span>DonorLink Admin</span>
+        <span>DonorLink</span>
       </router-link>
 
       <ul class="list-none p-0 m-0 flex-1">
+
         <li>
-          <router-link to="/" class="sidebar-item">
+          <router-link to="/app" class="sidebar-item">
             <i class="pi pi-home"></i>
             <span>Dashboard</span>
           </router-link>
         </li>
 
         <li>
-          <router-link to="/users" class="sidebar-item">
-            <i class="pi pi-users"></i>
-            <span>Users</span>
-          </router-link>
-        </li>
-
-        <li>
-          <router-link to="/blood-centers" class="sidebar-item">
+          <router-link to="/app/blood-centers" class="sidebar-item">
             <i class="pi pi-building"></i>
             <span>Blood Centers</span>
           </router-link>
         </li>
 
         <li>
-          <router-link to="/donations" class="sidebar-item">
+          <router-link to="/app/my-donations" class="sidebar-item">
             <i class="pi pi-heart"></i>
-            <span>Donations</span>
+            <span>My donations</span>
+          </router-link>
+        </li>
+
+        <li>
+          <router-link to="/app/my-profile" class="sidebar-item">
+            <i class="pi pi-user"></i>
+            <span>Profile</span>
           </router-link>
         </li>
       </ul>

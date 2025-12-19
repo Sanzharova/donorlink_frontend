@@ -1,19 +1,20 @@
-import { defineStore } from 'pinia';
-import { authApi } from '../api/authApi';
-import type { User } from '../models/User';
-import type { LoginRequest, RegisterRequest } from '../models/Auth';
+import {defineStore} from 'pinia';
+import {authApi} from '../api/authApi';
+import type {User} from '../models/User';
+import type {LoginRequest, RegisterRequest} from '../models/Auth';
+import {toastError} from "@/utils/toast.ts";
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    user: null as User | null,
+    user: JSON.parse(localStorage.getItem('user') || 'null') as User | null,
     accessToken: localStorage.getItem('accessToken') || '',
+    isAdmin: localStorage.getItem('isAdmin') === 'true',
     loading: false,
     error: '',
   }),
 
   getters: {
-    isAuthenticated: (state) => !!state.accessToken,
-    isAdmin: (state) => state.user?.roles.includes('admin') || false,
+    isAuthenticated: (state) => !!state.accessToken
   },
 
   actions: {
@@ -25,12 +26,20 @@ export const useAuthStore = defineStore('auth', {
         this.accessToken = res.data.accessToken;
         this.user = res.data.user;
 
+        console.log(this.user)
+        console.log(String(this.user.roles.includes('admin')));
+
         localStorage.setItem('accessToken', this.accessToken);
+        localStorage.setItem('user', JSON.stringify(this.user))
+        localStorage.setItem('isAdmin', String(this.user.roles.includes('admin')));
+
+        console.log(
+          localStorage.getItem('isAdmin')
+        )
 
         return true;
       } catch (e: any) {
-        this.error = e.response?.data?.error || 'Login error';
-
+        toastError(e.response?.data?.error);
         return false;
       } finally {
         this.loading = false;
@@ -46,10 +55,11 @@ export const useAuthStore = defineStore('auth', {
         this.user = res.data.user;
 
         localStorage.setItem('accessToken', this.accessToken);
-
+        localStorage.setItem('user', JSON.stringify(this.user))
+        localStorage.setItem('isAdmin', String(this.user.roles.includes('admin')));
         return true;
       } catch (e: any) {
-        this.error = e.response?.data?.error || 'Register error';
+        toastError(e.response?.data?.error);
         return false;
       } finally {
         this.loading = false;
@@ -62,7 +72,10 @@ export const useAuthStore = defineStore('auth', {
         this.accessToken = res.data.accessToken;
         this.user = res.data.user;
         localStorage.setItem('accessToken', this.accessToken);
-      } catch {
+        localStorage.setItem('user', JSON.stringify(this.user))
+        localStorage.setItem('isAdmin', String(this.user.roles.includes('admin')));
+      } catch (e: any) {
+        toastError(e.response?.data?.error);
         await this.logout();
       }
     },
@@ -73,6 +86,8 @@ export const useAuthStore = defineStore('auth', {
           this.user = null;
           this.accessToken = '';
           localStorage.removeItem('accessToken');
+          localStorage.removeItem('user');
+          localStorage.removeItem('isAdmin');
         });
     },
   },

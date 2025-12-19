@@ -38,6 +38,20 @@ export const useDonationsStore = defineStore('donations', {
       return res.data;
     },
 
+    async createDonation(data: {
+      scheduledFor: string
+      centerId: string
+      notes?: string
+    }) {
+      this.loading = true
+      try {
+        const res = await donationsApi.createDonation(data)
+        return res.data
+      } finally {
+        this.loading = false
+      }
+    },
+
     async updateDonation(id: string, data: Partial<Donation>) {
       const res = await donationsApi.updateDonation(id, data);
       return res.data;

@@ -19,6 +19,13 @@ export const usersApi = {
     return http.put<User>(`${prefix}/${id}`, data);
   },
 
+  resetPassword(id: string, data: {
+    oldPassword: string
+    newPassword: string
+  }) {
+    return http.patch(`${prefix}/reset-password/${id}`, data)
+  },
+
   toggleBan(id: string) {
     return http.patch(`${prefix}/toggle-ban/${id}`);
   },

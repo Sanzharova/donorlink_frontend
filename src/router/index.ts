@@ -11,20 +11,24 @@ import DonationEditPage from '@/views/DonationEditPage.vue'
 
 import LoginPage from '@/views/LoginPage.vue'
 import RegisterPage from '@/views/RegisterPage.vue'
+import UserLayout from "@/layouts/UserLayout.vue";
 import AdminLayout from "@/layouts/AdminLayout.vue";
+import UserDashboard from "@/views/UserDashboard.vue";
+import MyDonationsPage from "@/views/MyDonationsPage.vue";
+import RequestDonationPage from "@/views/RequestDonationPage.vue";
+import UserBloodCentersPage from "@/views/UserBloodCentersPage.vue";
+import ProfilePage from "@/views/ProfilePage.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/login',
-      name: 'login',
       component: LoginPage,
       meta: { public: true }
     },
     {
       path: '/register',
-      name: 'register',
       component: RegisterPage,
       meta: { public: true }
     },
@@ -32,17 +36,27 @@ const router = createRouter({
     {
       path: '/',
       component: AdminLayout,
+      meta: { requiresAdmin: true },
       children: [
-        { path: '', name: 'dashboard', component: DashboardPage },
+        { path: '', component: DashboardPage },
+        { path: 'users', component: UsersPage },
+        { path: 'blood-centers', component: BloodCentersPage },
+        { path: 'blood-centers/create', component: BloodCenterCreatePage },
+        { path: 'blood-centers/:id', component: BloodCenterEditPage },
+        { path: 'donations', component: DonationsPage },
+        { path: 'donations/:id', component: DonationEditPage }
+      ]
+    },
 
-        { path: 'users', name: 'users', component: UsersPage },
-
-        { path: 'blood-centers', name: 'blood-centers', component: BloodCentersPage },
-        { path: 'blood-centers/create', name: 'blood-centers-create', component: BloodCenterCreatePage },
-        { path: 'blood-centers/:id', name: 'blood-centers-edit', component: BloodCenterEditPage },
-
-        { path: 'donations', name: 'donations', component: DonationsPage },
-        { path: 'donations/:id', name: 'donation-edit', component: DonationEditPage },
+    {
+      path: '/app',
+      component: UserLayout,
+      children: [
+        { path: '', component: UserDashboard },
+        { path: 'blood-centers', component: UserBloodCentersPage },
+        { path: 'my-donations', component: MyDonationsPage },
+        { path: 'request-donation', component: RequestDonationPage },
+        { path: 'my-profile', component: ProfilePage }
       ]
     }
   ]
@@ -53,6 +67,10 @@ router.beforeEach((to) => {
 
   if (!to.meta.public && !auth.isAuthenticated) {
     return '/login'
+  }
+
+  if (to.meta.requiresAdmin && !auth.isAdmin) {
+    return '/app'
   }
 })
 
