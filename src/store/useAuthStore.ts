@@ -26,16 +26,9 @@ export const useAuthStore = defineStore('auth', {
         this.accessToken = res.data.accessToken;
         this.user = res.data.user;
 
-        console.log(this.user)
-        console.log(String(this.user.roles.includes('admin')));
-
         localStorage.setItem('accessToken', this.accessToken);
         localStorage.setItem('user', JSON.stringify(this.user))
         localStorage.setItem('isAdmin', String(this.user.roles.includes('admin')));
-
-        console.log(
-          localStorage.getItem('isAdmin')
-        )
 
         return true;
       } catch (e: any) {
