@@ -46,7 +46,7 @@ const toggleAdmin = async (u: User) => {
     <div class="flex align-items-center justify-content-between mb-4">
       <div>
         <h1 class="text-2xl font-bold m-0">Users</h1>
-        <h1 v-if="useAuthStore().isAdmin"> мдаааа </h1>
+        <h1 v-if="useAuthStore().isAdmin"> Users </h1>
         <span class="text-sm text-500">Manage platform users</span>
       </div>
     </div>

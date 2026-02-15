@@ -46,6 +46,27 @@ const nextDonationText = computed(() => {
   if (!nextDonation.value) return '—'
   return new Date(nextDonation.value.scheduledFor).toLocaleString()
 })
+
+const whyImportantItems = [
+  {
+    icon: 'pi pi-heart-fill',
+    iconClass: 'text-red-500',
+    title: 'Real Impact',
+    text: 'Every donation helps save lives.',
+  },
+  {
+    icon: 'pi pi-clock',
+    iconClass: 'text-primary',
+    title: '15–20 Minutes',
+    text: 'Minimal time commitment - maximum impact.',
+  },
+  {
+    icon: 'pi pi-shield',
+    iconClass: 'text-primary',
+    title: 'Safe Process',
+    text: 'Fully supervised by medical professionals.',
+  },
+] as const
 </script>
 
 <template>
@@ -58,6 +79,40 @@ const nextDonationText = computed(() => {
 
   <div v-else class="surface-card p-4 shadow-2 border-round">
 
+    <div class="relative overflow-hidden border-round-xl shadow-2 mb-5" style="min-height: 450px;">
+
+      <div
+        class="absolute top-0 left-0 w-full h-full bg-cover"
+        style="background-image: url('/images/about-1.jpg'); background-position: 80% center;"
+      ></div>
+
+      <div class="absolute top-0 left-0 w-full h-full" style="background: linear-gradient(to right, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 100%);"></div>
+
+      <div class="relative z-1 p-4 md:p-6 flex flex-column justify-content-center h-full">
+        <div class="max-w-30rem">
+          <h2 class="text-4xl font-bold mt-0 mb-3 text-white">Become a Hero</h2>
+          <p class="text-white opacity-90 text-xl mb-5 line-height-3">
+            Blood donation is a simple act that saves lives. Join our community and help those in need today.
+          </p>
+
+          <div class="flex flex-column gap-3" style="max-width: 280px;">
+            <Button
+              label="Request Donation"
+              icon="pi pi-heart"
+              class="p-button-raised p-button-lg font-bold w-full"
+              @click="router.push('/app/blood-centers')"
+            />
+
+            <Button
+              label="How it works"
+              icon="pi pi-info-circle"
+              class="p-button-lg font-bold surface-0 text-900 border-none w-full hover:surface-200 transition-colors transition-duration-150"
+              @click="router.push('/app/rules')"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="mb-4">
       <h1 class="text-2xl font-bold mb-1">
         Hello, {{ auth.user?.fullName }}
@@ -70,19 +125,19 @@ const nextDonationText = computed(() => {
       </div>
     </div>
 
-    <div class="grid mb-4">
+    <div class="grid mb-2">
       <div class="col-12 md:col-4">
-        <div class="surface-100 p-3 border-round text-center">
-          <div class="text-sm text-color-secondary">Total donations</div>
-          <div class="text-3xl font-bold">
+        <div class="surface-100 p-3 border-round text-center h-full flex flex-column justify-content-center">
+          <div class="text-sm text-color-secondary mb-1">Total donations</div>
+          <div class="text-3xl font-bold text-primary">
             {{ auth.user?.donationCount ?? 0 }}
           </div>
         </div>
       </div>
 
       <div class="col-12 md:col-4">
-        <div class="surface-100 p-3 border-round text-center">
-          <div class="text-sm text-color-secondary">Last donation</div>
+        <div class="surface-100 p-3 border-round text-center h-full flex flex-column justify-content-center">
+          <div class="text-sm text-color-secondary mb-1">Last donation</div>
           <div class="text-xl font-medium">
             {{ lastDonationText }}
           </div>
@@ -90,8 +145,8 @@ const nextDonationText = computed(() => {
       </div>
 
       <div class="col-12 md:col-4">
-        <div class="surface-100 p-3 border-round text-center">
-          <div class="text-sm text-color-secondary">Next donation</div>
+        <div class="surface-100 p-3 border-round text-center h-full flex flex-column justify-content-center">
+          <div class="text-sm text-color-secondary mb-1">Next donation</div>
           <div class="text-xl font-medium">
             {{ nextDonationText }}
           </div>
@@ -99,26 +154,43 @@ const nextDonationText = computed(() => {
       </div>
     </div>
 
-    <div class="flex gap-3">
-      <Button
-        label="Request Donation"
-        icon="pi pi-heart"
-        @click="router.push('/app/blood-centers')"
-      />
-      <Button
-        label="My Donations"
-        icon="pi pi-list"
-        severity="secondary"
-        @click="router.push('/app/my-donations')"
-      />
+    <!-- why it matters -->
+    <div class="mt-4">
+      <h2 class="text-xl font-bold mb-3">Почему это важно</h2>
+
+      <div class="grid">
+        <div
+          v-for="item in whyImportantItems"
+          :key="item.title"
+          class="col-12 md:col-4"
+        >
+          <div class="surface-0 p-4 border-1 surface-border border-round-lg h-full">
+            <div class="flex align-items-start gap-3">
+              <div class="flex align-items-center justify-content-center border-circle surface-100"
+                   style="width: 44px; height: 44px;">
+                <i :class="[item.icon, item.iconClass]" style="font-size: 18px;"></i>
+              </div>
+
+              <div class="flex-1">
+                <div class="font-semibold text-color mb-1">
+                  {{ item.title }}
+                </div>
+                <div class="text-sm text-color-secondary line-height-3">
+                  {{ item.text }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div
       v-if="auth.user?.status !== 'active'"
-      class="mt-4 p-3 border-round surface-200"
+      class="mt-4 p-3 border-round bg-red-50 border-left-3 border-red-500"
     >
-      <strong class="text-danger">Attention:</strong>
-      Your account status is {{ auth.user?.status }}.
+      <strong class="text-red-700">Attention:</strong>
+      <span class="text-red-700"> Your account status is {{ auth.user?.status }}.</span>
     </div>
 
   </div>

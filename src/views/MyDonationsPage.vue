@@ -32,56 +32,96 @@ onMounted(() => load());
 </script>
 
 <template>
-  <div class="surface-card p-4 shadow-2 border-round">
-    <div class="mb-4">
-      <h1 class="text-2xl font-bold">My Donations</h1>
-      <small class="text-color-secondary">
-        Total: {{ store.pagination?.total || 0 }}
-      </small>
-    </div>
+  <div class="surface-card p-4 shadow-2 border-round relative overflow-hidden">
+    <img
+      src="/images/table_flowers.png"
+      alt=""
+      class="absolute top-0 left-0 w-full h-full mb-8"
+      style="
+        object-fit: cover;
+        object-position: center 70%;
+        opacity: 1;
+        pointer-events: none;
+        user-select: none;
+        z-index: 0;
+      "
+    />
 
-    <DataTable
-      :value="store.donations"
-      :loading="store.loading"
-      stripedRows
-      size="small"
-    >
-      <Column header="Center">
-        <template #body="{ data }">
-          {{ getCenterName(data.centerId) }}
-        </template>
-      </Column>
+    <div
+      class="absolute top-0 left-0 w-full h-full"
+      style="
+        background: rgba(255,255,255,0.65);
+        pointer-events: none;
+        z-index: 0;
+      "
+    ></div>
 
-      <Column header="Status">
-        <template #body="{ data }">
-          <Tag :value="data.status"/>
-        </template>
-      </Column>
+    <div class="relative" style="z-index: 1;">
+      <div class="mb-4">
+        <h1 class="text-2xl font-bold">My Donations</h1>
+        <small class="text-color-secondary">
+          Total: {{ store.pagination?.total || 0 }}
+        </small>
+      </div>
 
-      <Column header="Scheduled">
-        <template #body="{ data }">
-          {{ new Date(data.scheduledFor).toLocaleString() }}
-        </template>
-      </Column>
+      <DataTable
+        :value="store.donations"
+        :loading="store.loading"
+        stripedRows
+        size="small"
+        class="bg-transparent"
+      >
+        <Column header="Center">
+          <template #body="{ data }">
+            {{ getCenterName(data.centerId) }}
+          </template>
+        </Column>
 
-      <Column header="Notes" style="max-width: 220px">
-        <template #body="{ data }">
+        <Column header="Status">
+          <template #body="{ data }">
+            <Tag :value="data.status" />
+          </template>
+        </Column>
+
+        <Column header="Scheduled">
+          <template #body="{ data }">
+            {{ new Date(data.scheduledFor).toLocaleString() }}
+          </template>
+        </Column>
+
+        <Column header="Notes" style="max-width: 220px">
+          <template #body="{ data }">
             <span
               class="text-sm text-color-secondary text-overflow-ellipsis block"
               v-tooltip.bottom="data.notes"
             >
-            {{ data.notes || '-' }}
-          </span>
-        </template>
-      </Column>
-    </DataTable>
+              {{ data.notes || '-' }}
+            </span>
+          </template>
+        </Column>
+      </DataTable>
 
-    <Paginator
-      v-if="store.pagination"
-      :rows="store.pagination.limit"
-      :totalRecords="store.pagination.total"
-      @page="e => load(e.page + 1)"
-      class="mt-3"
-    />
+      <Paginator
+        v-if="store.pagination"
+        :rows="store.pagination.limit"
+        :totalRecords="store.pagination.total"
+        @page="e => load(e.page + 1)"
+        class="mt-3"
+      />
+    </div>
+    <div class="mt-4 flex justify-content-center">
+      <img
+        src="/images/table_flowers.png"
+        alt=""
+        style="
+      max-width: 100%;
+      max-height: 100px;
+      opacity: 0.01;
+      pointer-events: none;
+      user-select: none;
+    "
+      />
+    </div>
   </div>
 </template>
+
