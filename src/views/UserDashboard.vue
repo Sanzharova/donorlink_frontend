@@ -154,9 +154,8 @@ const whyImportantItems = [
       </div>
     </div>
 
-    <!-- why it matters -->
     <div class="mt-4">
-      <h2 class="text-xl font-bold mb-3">Почему это важно</h2>
+      <h2 class="text-xl font-bold mb-3">Why it matters</h2>
 
       <div class="grid">
         <div

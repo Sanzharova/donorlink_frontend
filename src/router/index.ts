@@ -18,6 +18,7 @@ import MyDonationsPage from "@/views/MyDonationsPage.vue";
 import RequestDonationPage from "@/views/RequestDonationPage.vue";
 import UserBloodCentersPage from "@/views/UserBloodCentersPage.vue";
 import ProfilePage from "@/views/ProfilePage.vue";
+import RulesPage from "@/views/RulesPage.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -56,7 +57,8 @@ const router = createRouter({
         { path: 'blood-centers', component: UserBloodCentersPage },
         { path: 'my-donations', component: MyDonationsPage },
         { path: 'request-donation', component: RequestDonationPage },
-        { path: 'my-profile', component: ProfilePage }
+        { path: 'my-profile', component: ProfilePage },
+        { path: 'rules', component: RulesPage }
       ]
     }
   ]
